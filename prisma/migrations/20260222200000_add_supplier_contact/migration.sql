@@ -1,0 +1,5 @@
+-- Add optional contact fields to Supplier
+ALTER TABLE "Supplier"
+  ADD COLUMN IF NOT EXISTS "email" TEXT,
+  ADD COLUMN IF NOT EXISTS "phone" TEXT,
+  ADD COLUMN IF NOT EXISTS "address" TEXT;

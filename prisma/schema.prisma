@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum InvoiceStatus {
+  OPEN
+  PAID
+  CANCELLED
+}
+
+enum BillStatus {
+  OPEN
+  PAID
+  CANCELLED
+}
+
+enum InvoicePaymentType {
+  NONE
+  WITH_DISCOUNT
+  WITHOUT_DISCOUNT
+}
+
+enum ExpenseCategory {
+  VEHICLE_MAINTENANCE
+  FUEL
+  INSURANCE
+  OTHER
+}
+
+enum BillCategory {
+  MATERIALS
+  TOOLS
+  SUBCONTRACTOR
+  RENT
+  OTHER
+}
+
+model Client {
+  id        String    @id @default(uuid())
+  name      String
+  invoices  Invoice[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Supplier {
+  id        String    @id @default(uuid())
+  name      String
+
+  email     String?
+  phone     String?
+  address   String?
+
+  expenses  Expense[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bills     Bill[]
+}
+
+model Invoice {
+  id             String              @id @default(uuid())
+  number         String
+  clientId       String
+  client         Client              @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project        String?
+  issueDate      DateTime
+  dueDate        DateTime
+  status         InvoiceStatus       @default(OPEN)
+  amountTTC      Float
+  vatAmount      Float?
+  paidAmount     Float?              @default(0)
+  paymentType    InvoicePaymentType  @default(NONE)
+  paidAt         DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+}
+
+model Bill {
+  id         String      @id @default(uuid())
+  issueDate  DateTime
+  supplierId String
+  supplier   Supplier    @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  category   BillCategory?
+  status     BillStatus  @default(OPEN)
+  amountTTC  Float
+  vatAmount  Float?
+  notes      String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Expense {
+  id         String          @id @default(uuid())
+  date       DateTime
+  category   ExpenseCategory @default(OTHER)
+  amountTTC  Float
+  vatAmount  Float?
+  notes      String?
+  supplierId String?
+  supplier   Supplier?       @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+}
+
+model Employee {
+  id        String   @id @default(uuid())
+  name      String
+  salaries  Salary[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Salary {
+  id         String   @id @default(uuid())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  year       Int
+  month      Int
+  amount     Float
+  paidAt     DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([employeeId, year, month])
+}

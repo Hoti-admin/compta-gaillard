@@ -1,0 +1,11 @@
+/* Tailwind v4 (create-next-app récent) */
+@import "tailwindcss";
+
+/* Thème fiduciaire bleu/gris */
+:root{
+  --bg: #f5f7fb;
+}
+
+html, body {
+  background: var(--bg);
+}
