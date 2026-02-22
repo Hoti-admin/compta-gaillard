@@ -41,20 +41,26 @@ enum BillCategory {
 }
 
 model Client {
-  id        String    @id @default(uuid())
-  name      String
-  invoices  Invoice[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id   String @id @default(uuid())
+  name String
+
+  email   String? @db.VarChar(255)
+  phone   String? @db.VarChar(50)
+  address String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoices Invoice[]
 }
 
 model Supplier {
-  id        String    @id @default(uuid())
-  name      String
+  id   String @id @default(uuid())
+  name String
 
-  email     String?
-  phone     String?
-  address   String?
+  email   String?
+  phone   String?
+  address String?
 
   expenses  Expense[]
   createdAt DateTime  @default(now())
@@ -63,35 +69,35 @@ model Supplier {
 }
 
 model Invoice {
-  id             String              @id @default(uuid())
-  number         String
-  clientId       String
-  client         Client              @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  project        String?
-  issueDate      DateTime
-  dueDate        DateTime
-  status         InvoiceStatus       @default(OPEN)
-  amountTTC      Float
-  vatAmount      Float?
-  paidAmount     Float?              @default(0)
-  paymentType    InvoicePaymentType  @default(NONE)
-  paidAt         DateTime?
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
+  id          String             @id @default(uuid())
+  number      String
+  clientId    String
+  client      Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project     String?
+  issueDate   DateTime
+  dueDate     DateTime
+  status      InvoiceStatus      @default(OPEN)
+  amountTTC   Float
+  vatAmount   Float?
+  paidAmount  Float?             @default(0)
+  paymentType InvoicePaymentType @default(NONE)
+  paidAt      DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 }
 
 model Bill {
-  id         String      @id @default(uuid())
+  id         String        @id @default(uuid())
   issueDate  DateTime
   supplierId String
-  supplier   Supplier    @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  supplier   Supplier      @relation(fields: [supplierId], references: [id], onDelete: Cascade)
   category   BillCategory?
-  status     BillStatus  @default(OPEN)
+  status     BillStatus    @default(OPEN)
   amountTTC  Float
   vatAmount  Float?
   notes      String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 }
 
 model Expense {
@@ -116,15 +122,15 @@ model Employee {
 }
 
 model Salary {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   employeeId String
-  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   year       Int
   month      Int
   amount     Float
   paidAt     DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@unique([employeeId, year, month])
 }
