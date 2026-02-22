@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import PageTitle, { Card, Table, A, Input, Select, ButtonGhost, Badge } from "@/components/ui";
+import { PageTitle, Card, Table, A, Input, Select, ButtonGhost, Badge } from "@/components/ui";
 import { chf, isoDate } from "@/lib/format";
 import { BillStatus, BillCategory } from "@prisma/client";
 import { deleteBill, updateBillStatus } from "@/app/bills/actions";

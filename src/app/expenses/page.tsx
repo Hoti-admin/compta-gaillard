@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import PageTitle, { Card } from "@/components/ui";
+import { PageTitle, Card, Table, A, Input, Select, ButtonGhost, Badge } from "@/components/ui";
 import { chf } from "@/lib/format";
 
 export default async function ExpensesPage({
