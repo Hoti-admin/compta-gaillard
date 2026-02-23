@@ -69,31 +69,21 @@ model Supplier {
 }
 
 model Invoice {
-  id     String        @id @default(uuid())
-  number String? // si tu l’utilises
-  status InvoiceStatus @default(OPEN)
-
+  id        String   @id @default(uuid())
   issueDate DateTime
   dueDate   DateTime
 
-  vatRateBp Int @default(810) // ✅ TVA 8.1% = 810 bp
-
+  vatRateBp        Int @default(810)
   amountGrossCents Int
   amountNetCents   Int
   amountVatCents   Int
 
-  paidAt          DateTime?
-  paidAmountCents Int?
-  discountRateBp  Int? // ex: 200 = 2.00%
-  discountCents   Int?
-
   projectName String?
+  notes       String? // ✅ AJOUTER
 
-  clientId String?
+  // ... le reste (status, clientId, etc.)
   client   Client? @relation(fields: [clientId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  clientId String?
 }
 
 model Bill {
