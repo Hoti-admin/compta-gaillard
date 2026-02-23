@@ -69,21 +69,31 @@ model Supplier {
 }
 
 model Invoice {
-  id          String             @id @default(uuid())
-  number      String
-  clientId    String
-  client      Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  project     String?
-  issueDate   DateTime
-  dueDate     DateTime
-  status      InvoiceStatus      @default(OPEN)
-  amountTTC   Float
-  vatAmount   Float?
-  paidAmount  Float?             @default(0)
-  paymentType InvoicePaymentType @default(NONE)
-  paidAt      DateTime?
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id     String        @id @default(uuid())
+  number String? // si tu l’utilises
+  status InvoiceStatus @default(OPEN)
+
+  issueDate DateTime
+  dueDate   DateTime
+
+  vatRateBp Int @default(810) // ✅ TVA 8.1% = 810 bp
+
+  amountGrossCents Int
+  amountNetCents   Int
+  amountVatCents   Int
+
+  paidAt          DateTime?
+  paidAmountCents Int?
+  discountRateBp  Int? // ex: 200 = 2.00%
+  discountCents   Int?
+
+  projectName String?
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Bill {
